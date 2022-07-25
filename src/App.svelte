@@ -4,42 +4,44 @@
 	import Game from "./Components/Game.svelte"
 	import WelcomeScreen from "./Components/WelcomeScreen.svelte";
 
+	import type { Celebrity } from "./Components/types/game_data_type";
+	import type { GamePairs } from "./Components/types/game_pairs";
+
 	import { createRandomGamePair, filterByCategory } from "./utils/applySelection"
 
 	const cameoData = "https://cameo-explorer.netlify.app/celebs.json"
 	
 	let state = "welcome" // or play
-
-	let gameData: any;
+	let gameData: Array<Celebrity>;
 
 	const lookup = new Map()
 	const subset = new Set()
 
-	let celebsGamePairs;
+	let celebsGamePairs: Array<GamePairs>;
 
 
 	const fetchGameData = async () => {
 		const response = await fetch(cameoData)
-		gameData = await response.json()
+		gameData = await response.json() as Array<Celebrity>
 	}
 
 	const startGame = (e) => {
 		state = "playing"
-		celebsGamePairs = createRandomGamePair(filterByCategory(subset, e.detail.category))
+		celebsGamePairs = createRandomGamePair(filterByCategory(subset, e.detail.category)) ;
 	}
 
 	onMount( async () => {
 		await fetchGameData()
 
-		gameData.forEach(x => { 
-				lookup.set(x.id , x)
+		gameData.forEach(celeb => { 
+				lookup.set(celeb.id , celeb)
 			})
 
-		lookup.forEach(x => {
-			if(x.reviews >= 50){
-				subset.add(x)
+		lookup.forEach(celeb => {
+			if(celeb.reviews >= 50){
+				subset.add(celeb)
 			}
-			x.similar.forEach(id => {
+			celeb.similar.forEach(id => {
 				subset.add(lookup.get(id))
 
 			})

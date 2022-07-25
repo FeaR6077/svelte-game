@@ -1,6 +1,6 @@
 <script lang="ts">
     import Card from "./Card.svelte";
-    import { createEventDispatcher, beforeUpdate } from "svelte";
+    import { createEventDispatcher } from "svelte";
 
     export let celebsGamePairs;
     
@@ -9,30 +9,24 @@
     const dispatch = createEventDispatcher()
 
     const BASE_URL = "https://cameo-explorer.netlify.app/celebs/"
-    const FILE_EXTENSION = ".json"
-
+    const FILE_EXTENSION = ".json" 
+ 
     const prices = {
         "a": 0,
         "b": 0
     }
 
-
     const next_round_if_possible = () => {
-        console.log("here2  ")
         if(i === 9){
         dispatch("welcome")
         }
-        console.log("i is", i)
     }   
-   
 
     const check_if_even = () => {
-        if(prices.a === prices.b){
-            console.log("TRUE")
-        }
-        else{
-            console.log("you are wrong")
-        }
+      //  if(prices.a === prices.b){
+      //  }
+      //  else{
+      //  }
         i += 1
         next_round_if_possible()
 
