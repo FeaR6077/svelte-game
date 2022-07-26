@@ -1,6 +1,7 @@
 <script lang="ts">
-
     import { createEventDispatcher } from "svelte"
+
+    import type { GameCategory } from "./types/game_category"
 
     const dispatch = createEventDispatcher()
 
@@ -16,7 +17,7 @@
 
     let selected = false
 
-    const handleSelection = (category) => {
+    const handleSelection = (category: GameCategory) => {
         dispatch("selection", {category})
         selected = true
     }
