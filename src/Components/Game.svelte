@@ -1,55 +1,47 @@
 <script lang="ts">
-    import Card from "./Card.svelte";
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher, afterUpdate } from "svelte";
 
-    export let celebsGamePairs;
-    
+	import type { GamePairs } from "../Components/types/game_pairs";
+
+    import Card from "./Card.svelte";
+    import Results from "./Results.svelte";
+
+    export let celebsGamePairs: Array<GamePairs>;
     console.log(celebsGamePairs)
-    
+
     const dispatch = createEventDispatcher()
 
     const BASE_URL = "https://cameo-explorer.netlify.app/celebs/"
     const FILE_EXTENSION = ".json" 
+    let correctGuess: boolean;
  
     const prices = {
         "a": 0,
         "b": 0
     }
 
-    const next_round_if_possible = () => {
-        if(i === 9){
-        dispatch("welcome")
-        }
-    }   
+
 
     const check_if_even = () => {
-      //  if(prices.a === prices.b){
-      //  }
-      //  else{
-      //  }
-        i += 1
-        next_round_if_possible()
-
-    }
-
-    const check_if_bigger = (choice) => { 
-        console.log(choice)
-        const biggest_value = Object.keys(prices).reduce(function(a, b){ return prices[a] > prices[b] ? prices[a] : prices[b]})
-        if(choice == biggest_value){
-            console.log("right")
+        if(prices.a === prices.b){
+            correctGuess = true
         }
         else{
-            console.log("wrong")
+            correctGuess = false
         }
         i += 1
-
-        next_round_if_possible()
-
     }
 
-
-
-
+    const check_if_bigger = (choice:string) => { 
+        const biggest_value = Object.keys(prices).reduce(function(a, b){ return prices[a] > prices[b] ? prices[a] : prices[b]})
+        if(choice == biggest_value){
+            correctGuess = true
+        }
+        else{
+            correctGuess = false
+        }
+        i += 1
+    }
 
     //bangbangbrandon.json
     const load_details = async (celeb) =>{
@@ -93,7 +85,7 @@
 </div>
 
 <div class="results">
- <p> resulst will be here</p>
+    <Results celebsGamePairs={celebsGamePairs.length-1} stage={i} {correctGuess}/>
 </div>
 
 
@@ -126,6 +118,10 @@
     .same{
         display: flex;
         align-self: center;
+    }
+
+    .results{
+        display: flex;
     }
 </style>
 
